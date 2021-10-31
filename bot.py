@@ -3,7 +3,7 @@ import discord
 import asyncio
 from discord.ext import commands
 
-client = commands.Bot (command_prefix = "$" , activity = discord.Game(name="Persian D&D | $help ")) 
+client = commands.Bot (command_prefix = "$" , activity = discord.Game(name=" your activity here ! ")) 
 
 
 @client.command()
@@ -62,4 +62,4 @@ async def roll_1d100(ctx):
     embed = discord.Embed(title= (':game_die: your result for 1d100 is : ')+(n)) 
     await ctx.send(embed=embed)
 
-client.run('ODgxMDY4NzE5NzMwNzUzNTM2.YSndMA.sZwQ0KZAycxG1HupfS0vE0lD5PQ')
+client.run('your Token here !')
