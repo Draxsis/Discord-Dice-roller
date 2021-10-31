@@ -5,15 +5,9 @@ Actually it is the first version of this code i wrote it. :D
 
 To use the bot first replace your discord bot TOKEN and run the code then you can use it.
 
-example : 
+**example** : 
 
  >> $roll_1d4
- >> $roll_1d6
- >> $roll_1d8
- >> $roll_1d10
- >> $roll_1d12
- >> $roll_1d20
- >> $roll_1d100
   
 I'm glade if you tell me the bugs and problem you find in it !
 
