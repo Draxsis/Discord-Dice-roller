@@ -7,7 +7,7 @@ import discord
 import asyncio 
 from discord.ext import commands
 
-client = commands.Bot (command_prefix = "$" , description="This bot will help you to roll all types of dices! ", activity = discord.Game(name="YOUR SERVER ACTIVITY")) 
+client = commands.Bot (command_prefix = "$" , description="This bot will help you to roll all types of die! ", activity = discord.Game(name="YOUR SERVER ACTIVITY")) 
 
 def is_me(m):
     return m.author == client.user
@@ -75,8 +75,6 @@ def roll(ctx, roll : str):
     a, b, modifier, hit, num_of_dice, hold, dice_type = 0, 0, 0, 0, 0, 0, 0
     
     author = ctx.message.author
-    if (roll.find('>') != -1):
-        roll, hold = roll.split('>')
     if (roll.find('+') != -1):
         roll, modifier = roll.split('+')
     if (roll.find('d') != -1):
