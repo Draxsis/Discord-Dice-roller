@@ -1,14 +1,28 @@
 # Discord bot dice roller
 
-this is a simple code for discord bot it can roll 1d4, 1d6, 1d8, 1d10, 1d12, 1d20, 1d100 for you in your discord server. 
+this is a simple code for discord bot it can roll every dice for you in your server. 
 Actually it is the first version of this code i wrote it. :D
 
 To use the bot first replace your discord bot TOKEN and run the code then you can use it.
 
-**example** : 
+# Usage
 
- >> $roll_1d4
-  
-I'm glade if you tell me the bugs and problem you find in it !
+1. generate your discord bot TOKEN
+2. place it on bot and run it
+3. invite the bot into your server 
+4. enjoy ^^
 
-you can find me on Discord too and here is my Discord ID : Rolexsism#8597
+
+# Commands
+
+`$roll` Supported rolls are:
+
+$roll 100 - Rolls from 1-100
+
+$roll 50-100 - Rolls from 50-100
+
+$roll 3d6 - Rolls 3 6-sided die
+
+also you can add modifiers with simply use `+` for example **1d20+2** 
+
+
