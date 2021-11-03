@@ -1,5 +1,7 @@
+# description : d&d dice rolling bot for use on Discord servers
+# category : Tools and bots
 # copyright : Copyright (c) 2021 Mostafa koolabadi
-# version : 1.0.1
+# version : 1.0.2
 # author : Draxsis / Mostafa Koolabadi
 
 import random
@@ -7,7 +9,15 @@ import discord
 import asyncio 
 from discord.ext import commands
 
-client = commands.Bot (command_prefix = "$" , description="This bot will help you to roll all types of die! ", activity = discord.Game(name="YOUR SERVER ACTIVITY")) 
+client = commands.Bot (command_prefix = "$" , description="This bot will help you to roll all types of dices! ", activity = discord.Game(name="YOUR ACTIVITY HERE !")) 
+
+@client.event
+async def on_ready():
+    print('Logged in as')
+    print(client.user.name)
+    print(client.user.id)
+    print('------\n Bot is Online and ready for anything ^^ \n . \n . \n .')
+
 
 def is_me(m):
     return m.author == client.user
@@ -47,7 +57,7 @@ def roll_hit(num_of_dice, dice_type, hit, modifier, hold):
         y = random.randint(1, int(dice_type))
         if (int(hit) > 0):
             if (y >= int(hit)):
-                results += "**{}** ".format(y)
+                results += "{} ".format(y)
                 total += 1
             else:
                 results += "{} ".format(y)
@@ -74,7 +84,9 @@ def roll_hit(num_of_dice, dice_type, hit, modifier, hold):
 def roll(ctx, roll : str):
     a, b, modifier, hit, num_of_dice, hold, dice_type = 0, 0, 0, 0, 0, 0, 0
     
-    author = ctx.message.author
+    author_id = ctx.message.author.id
+    myid = f'<@{author_id}>'
+ 
     if (roll.find('+') != -1):
         roll, modifier = roll.split('+')
     if (roll.find('d') != -1):
@@ -135,9 +147,13 @@ def roll(ctx, roll : str):
             raise ValueError("Number of dice cannot be a negative number, please try again.")
             return
 
-    if a != 0 and b != 0:
-        yield from ctx.send(embed = discord.Embed(title= (':game_die: your die result is  '), description= ("** Total: ** ({}-{}) = ** `{}` **".format(a, b, roll_basic(a, b, modifier, hold)))))
-    else:
-        yield from ctx.send(embed = discord.Embed(title= (':game_die: your die result is  '), description= ("** Total: ** ({}d{}) ** `{}` **".format(num_of_dice, dice_type, roll_hit(num_of_dice, dice_type, hit, modifier, hold)))))
+    yield from ctx.message.delete()
 
-client.run('TOKEN')
+    if a != 0 and b != 0:
+        yield from ctx.send(myid, embed = discord.Embed(title= (':game_die: your die result is  '), description= ("** Total: ** ({}-{}) = ** `{}` **".format(a, b, roll_basic(a, b, modifier, hold)))))
+    else:
+        yield from ctx.send(myid, embed = discord.Embed(title= (':game_die: your die result is  '), description= ("** Total: ** ({}d{}) ** `{}` **".format(num_of_dice, dice_type, roll_hit(num_of_dice, dice_type, hit, modifier, hold)))))
+
+
+
+client.run('Token')
