@@ -11,7 +11,7 @@ import asyncio
 from discord.ext import commands
 from dotenv import load_dotenv
 
-client = commands.Bot (command_prefix = "$" , description="This bot will help you to roll all types of dices! ", activity = discord.Game(name="YOUR ACTIVITY HERE !")) 
+client = commands.Bot (command_prefix = "$" , description="This bot will help you to roll all types of dices! ", activity = discord.Game(name="Persian D&D | $help ")) 
 load_dotenv()
 
 @client.event
