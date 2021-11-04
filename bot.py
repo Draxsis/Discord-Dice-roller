@@ -4,12 +4,15 @@
 # version : 1.0.2
 # author : Draxsis / Mostafa Koolabadi
 
+import os
 import random
 import discord 
 import asyncio 
 from discord.ext import commands
+from dotenv import load_dotenv
 
 client = commands.Bot (command_prefix = "$" , description="This bot will help you to roll all types of dices! ", activity = discord.Game(name="YOUR ACTIVITY HERE !")) 
+load_dotenv()
 
 @client.event
 async def on_ready():
@@ -154,6 +157,5 @@ def roll(ctx, roll : str):
     else:
         yield from ctx.send(myid, embed = discord.Embed(title= (':game_die: your die result is  '), description= ("** Total: ** ({}d{}) ** `{}` **".format(num_of_dice, dice_type, roll_hit(num_of_dice, dice_type, hit, modifier, hold)))))
 
-
-
-client.run('Token')
+TOKEN = os.getenv("DISCORD_TOKEN")
+client.run(TOKEN)
