@@ -23,6 +23,6 @@ $roll 50-100 - Rolls from 50-100
 
 $roll 3d6 - Rolls 3 6-sided die
 
-also you can add modifiers with simply use `+` for example **1d20+2** 
+also, you can add modifiers by simply using `+` for example **1d20+2** 
 
 
