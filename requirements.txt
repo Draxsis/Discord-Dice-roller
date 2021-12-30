@@ -1,3 +1,4 @@
+# The requirements that you need to use for the bot
 discord.py
 python-dotenv
 d20
