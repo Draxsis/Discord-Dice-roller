@@ -12,7 +12,7 @@ from d20 import SimpleStringifier
 from discord import embeds 
 from discord.ext import commands
 
-#------------------------------- START --------------------------------------
+#------------------------------- START ---------------------------------------
 
 client = commands.Bot (command_prefix = "$" , description="This bot will help you to roll all types of dices! ", activity = discord.Game(name="Persian D&D | $help "))
 
@@ -26,7 +26,7 @@ async def on_ready():
 def is_me(m):
     return m.author == client.user
     
-#------------------------------ ROLLS DICE -----------------------------------
+#------------------------------ ROLLS DICE ------------------------------------
 
 @client.command(name='roll', aliases=['r'])
 async def Roll(ctx, *, dice: str = '1d20'):
@@ -43,7 +43,7 @@ async def Roll(ctx, *, dice: str = '1d20'):
     embed = discord.Embed(title= (':game_die: your die result is:\n'), description= (f'Total : ** {out} **'))
     await ctx.send(myid, embed=embed)
 
-#------------------------------ RANDCHAR -----------------------------------
+#------------------------------ RANDCHAR ------------------------------------
 @client.command(name='randchar', aliases=['rch'])
 async def randchar(ctx):
 
@@ -59,5 +59,6 @@ async def randchar(ctx):
     embed = discord.Embed(title= (':game_die: Generated random stats:\n'), description= (f'\n{stats}\n\n **Total = {total}**'))
     await ctx.send(myid, embed=embed)
 
+    
 TOKEN = os.getenv("DISCORD_TOKEN")
 client.run(TOKEN)
