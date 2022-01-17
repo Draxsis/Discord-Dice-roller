@@ -4,10 +4,8 @@
 # version : 1.0.0
 # author : Draxsis / Mostafa Koolabadi
 
-from ast import alias
 import os
 import platform
-from pydoc import describe
 import discord
 import d20
 from d20 import *
