@@ -3,5 +3,4 @@ discord.py
 python-dotenv
 d20
 bs4
-platform
 requests
