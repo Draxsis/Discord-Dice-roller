@@ -78,6 +78,22 @@ async def Klass(ctx, class_name): #returning results from wikidot website and sh
     await ctx.message.delete()
     await ctx.send(embed=embed)
     
+ 
+@client.command(name='generate', aliases=['gen'])
+async def Name_generator(ctx, name):
+
+    URL = f"https://www.fantasynamegenerators.com/{name}.php"
+    page = requests.get(URL)
+    soup = BeautifulSoup(page.text, 'html.parser')
+
+    get_names = soup.find('div', {'class':'svdNmSct'})
+
+    embed=discord.Embed(title="Generated names - D&D 5e edition", url=f"https://www.fantasynamegenerators.com/{name}", description=get_names)
+    embed.set_footer(text="powered by Draxsis from fantasynamegenerators")
+
+    await ctx.message.delete()
+    await ctx.send(embed=embed)
+  
     
 TOKEN = os.getenv("DISCORD_TOKEN")
 client.run(TOKEN)
