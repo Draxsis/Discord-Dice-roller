@@ -1,6 +1,6 @@
-# The requirements that you need to use for the bot
 discord.py
+requests
 python-dotenv
 d20
 bs4
-requests
+youtube_dl
