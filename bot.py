@@ -1,7 +1,6 @@
-# description : d&d dice rolling bot for use on Discord servers
 # category : Tools and bots
 # copyright : Copyright (c) 2021 Draxsis
-# version : 1.0.0
+# version : 1.0.1
 # author : Draxsis / Mostafa Koolabadi
 
 import os
@@ -11,10 +10,19 @@ import d20
 from d20 import *
 from discord import embeds 
 from discord.ext import commands
-import requests
-from bs4 import BeautifulSoup
+from dotenv import load_dotenv
+from discord.ext import commands
+from discord.utils import get
+from discord import FFmpegPCMAudio
+from discord import TextChannel
+from youtube_dl import YoutubeDL
 
-client = commands.Bot (command_prefix = "$" , description="This bot will help you to roll all types of dices! ", activity = discord.Game(name="Persian D&D | $help "))
+load_dotenv()
+client = commands.Bot (command_prefix = "$" ,
+                        description="This bot will help you to roll all types of dices! ",
+                        activity = discord.Game(name="Persian D&D | $help "))
+
+players = {}
 
 @client.event
 async def on_ready(): #showing the bot status
@@ -22,6 +30,8 @@ async def on_ready(): #showing the bot status
     print(f"Python version: {platform.python_version()}")
     print(f"Running on: {platform.system()} {platform.release()} ({os.name})")
     print("-------------------")
+
+#---
 
 @client.command(name='roll', aliases=['r'])
 async def Roll(ctx, *, dice: str = '1d20'): #main dice roller
@@ -38,6 +48,8 @@ async def Roll(ctx, *, dice: str = '1d20'): #main dice roller
     embed = discord.Embed(title= (':game_die: your die result is:\n'), description= (f'Total : ** {out} **'))
     await ctx.send(myid, embed=embed)
 
+#---
+
 @client.command(name='randchar', aliases=['rch'])
 async def randchar(ctx): # randomize 6 stats for character (4d6kh3 x 6)
 
@@ -48,52 +60,72 @@ async def randchar(ctx): # randomize 6 stats for character (4d6kh3 x 6)
     author_id = ctx.message.author.id
     myid = f'<@{author_id}>'
 
-    embed = discord.Embed(title= (':game_die: Generated random stats:\n'), description= (f'\n{stats}\n\n **Total = {total}**'))
+    embed = discord.Embed(title= (':game_die: Generated random stats:\n'),
+                         description= (f'\n{stats}\n\n **Total = {total}**'))
+
     await ctx.message.delete()             
     await ctx.send(myid, embed=embed)
 
-@client.command(name='class')
-async def Klass(ctx, class_name): #returning results from wikidot website and show details for each class
-    
-    URL = f"http://dnd5e.wikidot.com/{class_name}"
-    page = requests.get(URL)
-    soup = BeautifulSoup(page.text, 'lxml')
-    
-    info = soup.select("p")[0].getText()
-    hp = soup.select("p")[3].getText()
-    prof = soup.select("p")[4].getText()
-    equip1 = soup.select("li")[26].getText()
-    equip2 = soup.select("li")[27].getText()
-    equip3 = soup.select("li")[28].getText()
-    equip4 = soup.select("li")[29].getText()
- 
-    embed=discord.Embed(title=f"{class_name} - D&D 5e edition",
-                    url=f"http://dnd5e.wikidot.com/{class_name}",
-                    description= info)
-    embed.add_field(name="Hit Points", value=hp, inline=False)
-    embed.add_field(name="Proficiencies", value=prof, inline=False)
-    embed.add_field(name="Equipments", value=(f'{equip1} \n {equip2} \n {equip3} \n {equip4}'), inline=False)
-    embed.set_footer(text="powered by Draxsis from dnd5e.wikidot")
+#---
 
-    await ctx.message.delete()
-    await ctx.send(embed=embed)
-    
- 
-@client.command(name='generate', aliases=['gen'])
-async def Name_generator(ctx, name):
+@client.command(name='Join')
+async def join(ctx):
+    channel = ctx.message.author.voice.channel
+    voice = get(client.voice_clients, guild=ctx.guild)
+    if voice and voice.is_connected():
+        await voice.move_to(channel)
+    else:
+        voice = await channel.connect()
 
-    URL = f"https://www.fantasynamegenerators.com/{name}.php"
-    page = requests.get(URL)
-    soup = BeautifulSoup(page.text, 'html.parser')
+#---
 
-    get_names = soup.find('div', {'class':'svdNmSct'})
+@client.command(name='play')
+async def play(ctx, url):
+    YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist': 'True'}
+    FFMPEG_OPTIONS = {
+        'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
+    voice = get(client.voice_clients, guild=ctx.guild)
 
-    embed=discord.Embed(title="Generated names - D&D 5e edition", url=f"https://www.fantasynamegenerators.com/{name}", description=get_names)
-    embed.set_footer(text="powered by Draxsis from fantasynamegenerators")
+    if not voice.is_playing():
+        with YoutubeDL(YDL_OPTIONS) as ydl:
+            info = ydl.extract_info(url, download=False)
+        URL = info['url']
+        voice.play(FFmpegPCMAudio(URL, **FFMPEG_OPTIONS))
+        voice.is_playing()
+        await ctx.send('Bot is playing')
 
-    await ctx.message.delete()
-    await ctx.send(embed=embed)
-  
-    
-TOKEN = os.getenv("DISCORD_TOKEN")
-client.run(TOKEN)
+    else:
+        await ctx.send("Bot is already playing")
+        return
+
+#--
+
+@client.command(name='resume')
+async def resume(ctx):
+    voice = get(client.voice_clients, guild=ctx.guild)
+
+    if not voice.is_playing():
+        voice.resume()
+        await ctx.send('Bot is resuming')
+
+#--
+
+@client.command(name='pause')
+async def pause(ctx):
+    voice = get(client.voice_clients, guild=ctx.guild)
+
+    if voice.is_playing():
+        voice.pause()
+        await ctx.send('Bot has been paused')
+
+#--
+
+@client.command(name='stop')
+async def stop(ctx):
+    voice = get(client.voice_clients, guild=ctx.guild)
+
+    if voice.is_playing():
+        voice.stop()
+        await ctx.send('Stopping...')
+
+client.run(os.getenv('DISCORD_TOKEN'))
